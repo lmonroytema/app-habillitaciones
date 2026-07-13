@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Migración de Excel/VBA a Aplicación Web — Beneficios</title>
+    <link rel="stylesheet" href="./beneficios-migracion.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <script defer src="./beneficios-migracion.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div class="hero__top">
+          <div class="brand">
+            <div class="brand__mark">H</div>
+            <div>
+              <div class="brand__name">Habilitaciones</div>
+              <div class="brand__tag">Transformación digital y control documental</div>
+            </div>
+          </div>
+          <div class="hero__actions">
+            <button class="btn btnPrimary" id="btnDownloadPdf" type="button">Descargar PDF</button>
+            <a class="btn btnSoft" href="./cotizacion.html">Ver cotización</a>
+          </div>
+        </div>
+
+        <h1 class="hero__title">Justificación y beneficios de migrar de Excel/VBA + SharePoint a una aplicación web</h1>
+        <p class="hero__subtitle">
+          Pasar de un archivo local (macros) que cada usuario debe instalar y sincronizar, a una plataforma web centralizada, mejora control, seguridad,
+          trazabilidad y escalabilidad del proceso de habilitaciones.
+        </p>
+
+        <div class="hero__stats" id="heroStats"></div>
+      </header>
+
+      <section class="card">
+        <div class="sectionHead">
+          <h2>Situación actual (Excel/VBA en local + SharePoint)</h2>
+          <div class="sectionHint">Dolores típicos del modelo basado en archivos</div>
+        </div>
+        <div class="twoCol">
+          <div class="panel">
+            <div class="panel__title">Cómo funciona hoy</div>
+            <div class="list" id="asIsHow"></div>
+          </div>
+          <div class="panel">
+            <div class="panel__title">Riesgos / fricción</div>
+            <div class="list" id="asIsPain"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="sectionHead">
+          <h2>Propuesta (aplicación web centralizada)</h2>
+          <div class="sectionHint">Un único sistema, múltiples usuarios y control total</div>
+        </div>
+        <div class="twoCol">
+          <div class="panel">
+            <div class="panel__title">Cómo funcionará</div>
+            <div class="list" id="toBeHow"></div>
+          </div>
+          <div class="panel">
+            <div class="panel__title">Beneficios operativos</div>
+            <div class="list" id="toBeBenefits"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="sectionHead">
+          <h2>Comparativo</h2>
+          <div class="sectionHint">Excel local vs Aplicación web</div>
+        </div>
+        <div class="tableWrap">
+          <table class="cmpTable" aria-label="Comparativo Excel vs Web">
+            <thead>
+              <tr>
+                <th>Aspecto</th>
+                <th>Excel/VBA + SharePoint (local)</th>
+                <th>Aplicación web (centralizada)</th>
+              </tr>
+            </thead>
+            <tbody id="cmpRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="sectionHead">
+          <h2>Beneficios clave</h2>
+          <div class="sectionHint">Lo que se gana con la migración</div>
+        </div>
+        <div class="benefits" id="benefitsGrid"></div>
+      </section>
+
+      <section class="card">
+        <div class="sectionHead">
+          <h2>Arquitectura y stack sugerido</h2>
+          <div class="sectionHint">Moderno, escalable y mantenible</div>
+        </div>
+        <div class="stack">
+          <div class="stack__grid" id="stackGrid"></div>
+          <div class="note">
+            El repositorio de documentos puede mantenerse en SharePoint (integración vía Microsoft Graph) o migrarse a un almacenamiento dedicado con URLs
+            firmadas; en ambos casos el control de permisos, auditoría y vigencias queda centralizado. Además, la plataforma puede relacionarse con
+            herramientas externas como IAuditor y con soluciones internas de Power Platform como Project Hub para consolidar información operativa y de proyectos.
+            La elección de PHP/Laravel y MySQL también se sustenta en que el hosting contratado en Hostinger facilita este stack de forma natural, con un despliegue
+            más directo y menor fricción operativa.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="sectionHead">
+          <h2>Plan de implementación recomendado</h2>
+          <div class="sectionHint">Entrega incremental con mínimo riesgo</div>
+        </div>
+        <ol class="steps" id="steps"></ol>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__line">
+          Documento informativo — Migración de Excel/VBA a Aplicación Web · Generado para evaluación técnica y gerencial.
+        </div>
+        <div class="footer__muted">
+          Si deseas, adapto esta página con el branding exacto de tu empresa y la incluyo como documento descargable dentro del sistema.
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

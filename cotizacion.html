@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cotización - Aplicación Habilitaciones</title>
+    <link rel="stylesheet" href="./cotizacion.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <script defer src="./cotizacion.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div class="header__left">
+          <div class="badge">PROFORMA / COTIZACIÓN</div>
+          <h1 class="title">Cotización — Aplicación Habilitaciones</h1>
+          <div class="meta">
+            <div><span class="meta__label">Emisor:</span> <span id="issuerName"></span></div>
+            <div><span class="meta__label">RUC:</span> <span id="issuerRuc"></span></div>
+            <div><span class="meta__label">Fecha:</span> <span id="quoteDate"></span></div>
+            <div><span class="meta__label">N.º:</span> <span id="quoteNumber"></span></div>
+          </div>
+        </div>
+
+        <div class="header__right">
+          <div class="qrWrap">
+            <canvas id="qrCanvas" width="198" height="198" aria-label="QR"></canvas>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <h2>Cliente</h2>
+        <div class="grid2">
+          <div><span class="meta__label">RUC:</span> <span id="clientRuc"></span></div>
+          <div><span class="meta__label">Razón social:</span> <span id="clientName"></span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Resumen del Servicio</h2>
+        <p class="lead">
+          Esta cotización considera adecuaciones/modificaciones sobre la aplicación actual en Excel (Habilitaciones), además de carga/ingreso de información inicial y pruebas funcionales, incluyendo un reporte de seguimiento por correo electrónico 1–2 días por semana.
+        </p>
+        <div class="list">
+          <div class="list__item">Adecuación de la solución Excel/VBA a los requerimientos del cliente</div>
+          <div class="list__item">Ingreso de información inicial (carga y validación de datos base)</div>
+          <div class="list__item">Pruebas de funcionamiento (flujos críticos y consistencia de información)</div>
+          <div class="list__item">Reporte de notificación por correo (seguimiento 1–2 días por semana)</div>
+        </div>
+        <div class="note">
+          Alternativa: si el servicio se limita únicamente a ingreso de información y pruebas (sin adecuaciones/modificaciones), aplica una cotización reducida.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Alcance Técnico (Análisis del Archivo Excel)</h2>
+        <div class="muted">
+          Resumen basado en el análisis del proyecto VBA embebido en el archivo .xlsm proporcionado.
+        </div>
+        <div class="list">
+          <div class="list__item">Sincroniza información desde un archivo “central” hacia el archivo local (tablas de catálogos, maestros y registros), removiendo filtros y reemplazando datos.</div>
+          <div class="list__item">Genera tableros y resúmenes de habilitaciones para Personal, Vehículos y Embarcaciones en base a filtros (proyecto, empresa, servicio/puesto, etc.).</div>
+          <div class="list__item">Permite adjuntar archivos (PDF/JPG) a registros activos en dashboards: copia metadatos (emisión, vigencia, observación), renombra archivos con abreviaturas y fecha, y crea copia en BACKUP.</div>
+          <div class="list__item">Crea y depura estructura de carpetas del proyecto (HABILITACIONES/PERSONAL/VEHICULOS, RECURSOS y BACKUP) según tablas maestras.</div>
+          <div class="list__item">Evalúa vigencia de documentos (VIGENTE / POR VENCER / VENCIDO) y actualiza estados en el tablero.</div>
+          <div class="list__item">Incluye utilitarios de mantenimiento y soporte (exportación de módulos VBA, mantenimiento de tablas por puesto/vehículo, actualización de accesos directos .lnk, navegación y ocultamiento de hojas de apoyo).</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Plazo y Condiciones</h2>
+        <div class="grid2">
+          <div>
+            <div class="meta__label">Plazo de entrega</div>
+            <div class="strong">Opción A: hasta 3 semanas</div>
+            <div class="muted">Contadas desde la entrega de información por parte del cliente; la entrega final podría ser en menos días.</div>
+            <div class="strong mt10">Opción B: hasta 2 semanas</div>
+            <div class="muted">Aplica si el servicio se limita a ingreso de información y pruebas (sin adecuaciones/modificaciones).</div>
+          </div>
+          <div>
+            <div class="meta__label">Forma de pago</div>
+            <div class="strong">50% para inicio del servicio</div>
+            <div class="muted">Saldo contra entrega del servicio.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Detalle Económico</h2>
+        <div class="table">
+          <div class="table__row table__head">
+            <div>Concepto</div>
+            <div class="right">Importe</div>
+          </div>
+          <div class="table__row">
+            <div>
+              Opción A — Adecuación/modificaciones sobre la aplicación actual (incluye carga inicial, pruebas y reporte de seguimiento por correo 1–2 días/semana)
+            </div>
+            <div class="right">S/ 3,000.00</div>
+          </div>
+          <div class="table__row">
+            <div>
+              Opción B — Solo ingreso de información inicial y pruebas (sin adecuaciones/modificaciones)
+            </div>
+            <div class="right">S/ 1,500.00</div>
+          </div>
+          <div class="table__row table__foot">
+            <div class="muted">Importes sin IGV</div>
+            <div class="right strong">—</div>
+          </div>
+        </div>
+        <div class="note">
+          Precio no incluye IGV.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Responsable</h2>
+        <div class="grid2">
+          <div>
+            <div class="meta__label">Analista de sistemas</div>
+            <div class="strong" id="analystName"></div>
+          </div>
+          <div>
+            <div class="meta__label">Validez de la cotización</div>
+            <div class="strong" id="validityDays"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="actions">
+        <button class="btn" id="btnDownloadPdf" type="button">Descargar PDF</button>
+      </section>
+
+      <footer class="footer">
+        <div class="muted" id="footerLine"></div>
+      </footer>
+    </main>
+  </body>
+</html>

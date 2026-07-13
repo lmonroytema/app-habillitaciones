@@ -1,0 +1,46 @@
+:root {
+  --bg: #f5f6f8;
+  --panel: #ffffff;
+  --panel2: #fafbfc;
+  --stroke: #dde2e8;
+  --stroke2: #cfd6df;
+  --text: #24303d;
+  --muted: #6f7b8b;
+  --brand: #c91f39;
+  --brand2: #de5265;
+  --ok: #1f9a6d;
+  --warn: #b87917;
+  --bad: #c63448;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.45;
+  font-weight: 450;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
