@@ -46,10 +46,10 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
-            'plate' => ['required', 'string', 'max:255', 'unique:vehicles,plate'],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
+            'position_id' => ['nullable', 'integer', $this->tenantExists('positions')],
+            'plate' => ['required', 'string', 'max:255', $this->tenantUnique('vehicles', 'plate')],
             'vehicle_type' => ['nullable', 'string', 'max:255'],
             'brand' => ['nullable', 'string', 'max:255'],
             'model' => ['nullable', 'string', 'max:255'],
@@ -75,10 +75,10 @@ class VehicleController extends Controller
     public function update(Request $request, Vehicle $vehicle)
     {
         $validated = $request->validate([
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
-            'plate' => ['required', 'string', 'max:255', 'unique:vehicles,plate,' . $vehicle->id],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
+            'position_id' => ['nullable', 'integer', $this->tenantExists('positions')],
+            'plate' => ['required', 'string', 'max:255', $this->tenantUnique('vehicles', 'plate', $vehicle->id)],
             'vehicle_type' => ['nullable', 'string', 'max:255'],
             'brand' => ['nullable', 'string', 'max:255'],
             'model' => ['nullable', 'string', 'max:255'],

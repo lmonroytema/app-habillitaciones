@@ -41,10 +41,10 @@ class VesselController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
             'name' => ['required', 'string', 'max:255'],
-            'registration' => ['nullable', 'string', 'max:255', 'unique:vessels,registration'],
+            'registration' => ['nullable', 'string', 'max:255', $this->tenantUnique('vessels', 'registration')],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -66,10 +66,10 @@ class VesselController extends Controller
     public function update(Request $request, Vessel $vessel)
     {
         $validated = $request->validate([
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
             'name' => ['required', 'string', 'max:255'],
-            'registration' => ['nullable', 'string', 'max:255', 'unique:vessels,registration,' . $vessel->id],
+            'registration' => ['nullable', 'string', 'max:255', $this->tenantUnique('vessels', 'registration', $vessel->id)],
             'is_active' => ['nullable', 'boolean'],
         ]);
 

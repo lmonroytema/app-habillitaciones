@@ -22,11 +22,37 @@ class AuthController extends Controller
             return response()->json(['message' => 'Credenciales inválidas.'], 422);
         }
 
+        if (!$user->is_active) {
+            return response()->json(['message' => 'Usuario deshabilitado. Contacte al administrador.'], 403);
+        }
+
+        $tenant = $user->tenant;
+
+        if (!$user->isSuperAdmin()) {
+            if (!$tenant) {
+                return response()->json(['message' => 'Usuario sin organización asignada.'], 403);
+            }
+
+            if ($tenant->isSuspended()) {
+                return response()->json([
+                    'message' => 'La suscripción de la organización está suspendida. Contacte al proveedor.',
+                    'code' => 'TENANT_SUSPENDED',
+                ], 402);
+            }
+
+            if ($tenant->isTrialExpired()) {
+                return response()->json([
+                    'message' => 'El período de prueba finalizó. Contrate un plan para continuar.',
+                    'code' => 'TRIAL_EXPIRED',
+                ], 402);
+            }
+        }
+
         $token = $user->createToken($validated['device_name'] ?? 'web')->plainTextToken;
 
         return response()->json([
             'token' => $token,
-            'user' => $user,
+            'user' => $this->userPayload($user),
         ]);
     }
 
@@ -48,7 +74,7 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         return response()->json([
-            'user' => $request->user(),
+            'user' => $this->userPayload($request->user()),
         ]);
     }
 
@@ -56,5 +82,25 @@ class AuthController extends Controller
     {
         $request->user()?->currentAccessToken()?->delete();
         return response()->json(['message' => 'OK']);
+    }
+
+    private function userPayload(User $user): array
+    {
+        $tenant = $user->tenant;
+
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role,
+            'tenant' => $tenant ? [
+                'id' => $tenant->id,
+                'name' => $tenant->name,
+                'plan' => $tenant->plan,
+                'status' => $tenant->status,
+                'trial_ends_at' => $tenant->trial_ends_at?->toDateString(),
+                'max_users' => $tenant->effectiveMaxUsers(),
+            ] : null,
+        ];
     }
 }

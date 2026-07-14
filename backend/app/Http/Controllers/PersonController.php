@@ -41,10 +41,10 @@ class PersonController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
-            'personal_group_id' => ['nullable', 'integer', 'exists:personal_groups,id'],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
+            'position_id' => ['nullable', 'integer', $this->tenantExists('positions')],
+            'personal_group_id' => ['nullable', 'integer', $this->tenantExists('personal_groups')],
             'document_id' => ['nullable', 'string', 'max:255'],
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
@@ -70,10 +70,10 @@ class PersonController extends Controller
     public function update(Request $request, Person $person)
     {
         $validated = $request->validate([
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
-            'personal_group_id' => ['nullable', 'integer', 'exists:personal_groups,id'],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
+            'position_id' => ['nullable', 'integer', $this->tenantExists('positions')],
+            'personal_group_id' => ['nullable', 'integer', $this->tenantExists('personal_groups')],
             'document_id' => ['nullable', 'string', 'max:255'],
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],

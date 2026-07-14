@@ -1,5 +1,5 @@
 import { FormEvent, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ApiError, apiFetch } from '../api';
 import { useAuth } from '../auth';
 
@@ -123,6 +123,10 @@ export default function LoginPage() {
               >
                 He olvidado mi contraseña
               </button>
+
+              <Link className="textLink" to="/register">
+                ¿Su organización aún no tiene cuenta? Pruebe gratis 30 días
+              </Link>
             </form>
 
             {recoveryOpen ? (

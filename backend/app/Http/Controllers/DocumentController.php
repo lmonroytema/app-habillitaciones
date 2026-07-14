@@ -7,6 +7,7 @@ use App\Models\Person;
 use App\Models\Vehicle;
 use App\Models\Vessel;
 use App\Services\SharePointClient;
+use App\Support\TenantContext;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -36,7 +37,7 @@ class DocumentController extends Controller
         $validated = $request->validate([
             'documentable_type' => ['required', 'string'],
             'documentable_id' => ['required', 'integer'],
-            'requirement_id' => ['nullable', 'integer', 'exists:requirements,id'],
+            'requirement_id' => ['nullable', 'integer', $this->tenantExists('requirements')],
             'issue_date' => ['nullable', 'date'],
             'expiry_date' => ['nullable', 'date'],
             'observation' => ['nullable', 'string', 'max:255'],
@@ -48,10 +49,12 @@ class DocumentController extends Controller
 
         $file = $request->file('file');
         $client = app(SharePointClient::class);
-        $relativePath = 'documents/' . now()->format('Y/m') . '/' . $file->getClientOriginalName();
+        // Carpeta separada por tenant para aislar los archivos de cada organización.
+        $baseFolder = 'tenants/' . (TenantContext::id() ?? 0) . '/documents/' . now()->format('Y/m');
+        $relativePath = $baseFolder . '/' . $file->getClientOriginalName();
 
         $storageDriver = 'local';
-        $storedPath = $file->storePublicly('documents/' . now()->format('Y/m'), 'public');
+        $storedPath = $file->storePublicly($baseFolder, 'public');
         $sharepointDriveId = null;
         $sharepointItemId = null;
         $sharepointWebUrl = null;
@@ -143,7 +146,7 @@ class DocumentController extends Controller
     public function update(Request $request, Document $document)
     {
         $validated = $request->validate([
-            'requirement_id' => ['nullable', 'integer', 'exists:requirements,id'],
+            'requirement_id' => ['nullable', 'integer', $this->tenantExists('requirements')],
             'issue_date' => ['nullable', 'date'],
             'expiry_date' => ['nullable', 'date'],
             'observation' => ['nullable', 'string', 'max:255'],

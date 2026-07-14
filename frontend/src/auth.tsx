@@ -2,10 +2,31 @@ import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ApiError, apiFetch, setToken } from './api';
 
+export type UserRole = 'super_admin' | 'admin' | 'operator' | 'viewer';
+
+export type AuthTenant = {
+  id: number;
+  name: string;
+  plan: string;
+  status: string;
+  trial_ends_at: string | null;
+  max_users: number | null;
+};
+
 export type AuthUser = {
   id: number;
   name: string;
   email: string;
+  role: UserRole;
+  tenant: AuthTenant | null;
+};
+
+export type RegisterPayload = {
+  organization_name: string;
+  ruc?: string;
+  name: string;
+  email: string;
+  password: string;
 };
 
 type AuthState = {
@@ -13,6 +34,7 @@ type AuthState = {
   user: AuthUser | null;
   isBooting: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
   refreshMe: () => Promise<void>;
 };
@@ -69,6 +91,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(res.user);
   }, []);
 
+  const register = useCallback(async (payload: RegisterPayload) => {
+    const res = await apiFetch<{ token: string; user: AuthUser }>('/api/register', {
+      method: 'POST',
+      auth: false,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    setToken(res.token);
+    setTokenState(res.token);
+    setUser(res.user);
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await apiFetch<{ message: string }>('/api/logout', { method: 'POST' });
@@ -85,10 +119,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       isBooting,
       login,
+      register,
       logout,
       refreshMe,
     }),
-    [isBooting, login, logout, refreshMe, token, user],
+    [isBooting, login, logout, refreshMe, register, token, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -99,3 +134,17 @@ export function useAuth() {
   if (!ctx) throw new Error('AuthProvider faltante');
   return ctx;
 }
+
+export const PLAN_LABELS: Record<string, string> = {
+  trial: 'Prueba',
+  basic: 'Básico',
+  pro: 'Profesional',
+  enterprise: 'Empresarial',
+};
+
+export const ROLE_LABELS: Record<string, string> = {
+  super_admin: 'Super admin',
+  admin: 'Administrador',
+  operator: 'Operador',
+  viewer: 'Consulta',
+};

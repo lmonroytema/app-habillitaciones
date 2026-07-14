@@ -39,9 +39,9 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => ['required', 'string', 'max:255', 'unique:projects,code'],
+            'code' => ['required', 'string', 'max:255', $this->tenantUnique('projects', 'code')],
             'name' => ['required', 'string', 'max:255'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -63,9 +63,9 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'code' => ['required', 'string', 'max:255', 'unique:projects,code,' . $project->id],
+            'code' => ['required', 'string', 'max:255', $this->tenantUnique('projects', 'code', $project->id)],
             'name' => ['required', 'string', 'max:255'],
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
+            'company_id' => ['nullable', 'integer', $this->tenantExists('companies')],
             'is_active' => ['nullable', 'boolean'],
         ]);
 

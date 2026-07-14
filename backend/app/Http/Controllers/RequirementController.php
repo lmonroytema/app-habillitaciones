@@ -44,8 +44,8 @@ class RequirementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'abbreviation' => ['nullable', 'string', 'max:255'],
             'is_required' => ['nullable', 'boolean'],
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'position_id' => ['nullable', 'integer', $this->tenantExists('positions')],
             'vehicle_type' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -71,8 +71,8 @@ class RequirementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'abbreviation' => ['nullable', 'string', 'max:255'],
             'is_required' => ['nullable', 'boolean'],
-            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
-            'position_id' => ['nullable', 'integer', 'exists:positions,id'],
+            'project_id' => ['nullable', 'integer', $this->tenantExists('projects')],
+            'position_id' => ['nullable', 'integer', $this->tenantExists('positions')],
             'vehicle_type' => ['nullable', 'string', 'max:255'],
         ]);
 

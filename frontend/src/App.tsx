@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth } from './auth';
+import { PLAN_LABELS, ROLE_LABELS, useAuth } from './auth';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import PeoplePage from './pages/PeoplePage';
 import VehiclesPage from './pages/VehiclesPage';
 import VesselsPage from './pages/VesselsPage';
@@ -10,6 +11,8 @@ import RequirementsPage from './pages/RequirementsPage';
 import CompaniesPage from './pages/CompaniesPage';
 import ProjectsPage from './pages/ProjectsPage';
 import DocumentsPage from './pages/DocumentsPage';
+import UsersPage from './pages/UsersPage';
+import TenantsPage from './pages/TenantsPage';
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { token, isBooting } = useAuth();
@@ -23,6 +26,12 @@ function AppShell() {
   const { user, logout } = useAuth();
   const nav = useNavigate();
 
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
+  const isSuperAdmin = user?.role === 'super_admin';
+  const tenant = user?.tenant ?? null;
+
+  const navClass = ({ isActive }: { isActive: boolean }) => (isActive ? 'navItem navItemActive' : 'navItem');
+
   return (
     <div className="shell">
       <aside className="sidebar">
@@ -35,27 +44,37 @@ function AppShell() {
         </div>
 
         <nav className="nav">
-          <NavLink to="/people" className={({ isActive }) => (isActive ? 'navItem navItemActive' : 'navItem')}>
+          <NavLink to="/people" className={navClass}>
             Personas
           </NavLink>
-          <NavLink to="/vehicles" className={({ isActive }) => (isActive ? 'navItem navItemActive' : 'navItem')}>
+          <NavLink to="/vehicles" className={navClass}>
             Vehículos
           </NavLink>
-          <NavLink to="/vessels" className={({ isActive }) => (isActive ? 'navItem navItemActive' : 'navItem')}>
+          <NavLink to="/vessels" className={navClass}>
             Embarcaciones
           </NavLink>
-          <NavLink to="/requirements" className={({ isActive }) => (isActive ? 'navItem navItemActive' : 'navItem')}>
+          <NavLink to="/requirements" className={navClass}>
             Requisitos
           </NavLink>
-          <NavLink to="/companies" className={({ isActive }) => (isActive ? 'navItem navItemActive' : 'navItem')}>
+          <NavLink to="/companies" className={navClass}>
             Empresas
           </NavLink>
-          <NavLink to="/projects" className={({ isActive }) => (isActive ? 'navItem navItemActive' : 'navItem')}>
+          <NavLink to="/projects" className={navClass}>
             Proyectos
           </NavLink>
-          <NavLink to="/documents" className={({ isActive }) => (isActive ? 'navItem navItemActive' : 'navItem')}>
+          <NavLink to="/documents" className={navClass}>
             Documentos
           </NavLink>
+          {isAdmin ? (
+            <NavLink to="/users" className={navClass}>
+              Usuarios
+            </NavLink>
+          ) : null}
+          {isSuperAdmin ? (
+            <NavLink to="/tenants" className={navClass}>
+              Organizaciones
+            </NavLink>
+          ) : null}
         </nav>
 
         <div className="sidebarBottom">
@@ -87,12 +106,21 @@ function AppShell() {
           </div>
 
           <div className="topbarMeta">
-            <div className="projectBadge">Control operativo</div>
+            <div className="projectBadge">
+              {isSuperAdmin
+                ? 'Plataforma'
+                : tenant
+                  ? `${tenant.name} · Plan ${PLAN_LABELS[tenant.plan] ?? tenant.plan}`
+                  : 'Control operativo'}
+            </div>
+            {tenant?.plan === 'trial' && tenant.trial_ends_at ? (
+              <div className="projectBadge">Prueba hasta {tenant.trial_ends_at}</div>
+            ) : null}
             <div className="userSummary">
               <div className="userAvatar">{(user?.name ?? 'A').slice(0, 1).toUpperCase()}</div>
               <div>
                 <div className="userSummaryName">{user?.name ?? '—'}</div>
-                <div className="userSummaryEmail">{user?.email ?? ''}</div>
+                <div className="userSummaryEmail">{user ? (ROLE_LABELS[user.role] ?? user.role) : ''}</div>
               </div>
             </div>
           </div>
@@ -107,6 +135,8 @@ function AppShell() {
             <Route path="/companies" element={<CompaniesPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/documents" element={<DocumentsPage />} />
+            {isAdmin ? <Route path="/users" element={<UsersPage />} /> : null}
+            {isSuperAdmin ? <Route path="/tenants" element={<TenantsPage />} /> : null}
             <Route path="*" element={<Navigate to="/people" replace />} />
           </Routes>
         </main>
@@ -120,6 +150,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={token ? <Navigate to="/people" replace /> : <LoginPage />} />
+      <Route path="/register" element={token ? <Navigate to="/people" replace /> : <RegisterPage />} />
       <Route
         path="/*"
         element={
